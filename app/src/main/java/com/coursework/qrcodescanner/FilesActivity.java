@@ -71,12 +71,21 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
             public void onClick(DialogInterface dialog, int which) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
 
-                mAdapter.remove(selectedItem);
-                mAdapter.notifyDataSetChanged();
+                File sdPath = Environment.getExternalStorageDirectory();
+                File file = new File(sdPath.getAbsolutePath() + "/Отчёты/" + selectedItem);
+                boolean result = file.delete();
+                if (result) {
+                    mAdapter.remove(selectedItem);
+                    mAdapter.notifyDataSetChanged();
 
-                Toast.makeText(getApplicationContext(),
-                        selectedItem + " удалён.",
-                        Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "Файл " + selectedItem + " удалён.",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Ошибка",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
         alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
