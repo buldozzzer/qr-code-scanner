@@ -2,11 +2,14 @@ package com.coursework.qrcodescanner;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -105,16 +108,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public static boolean isExternalStorageReadOnly() {
-        String extStorageState = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState);
-    }
-
-    public static boolean isExternalStorageAvailable() {
-        String extStorageState = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(extStorageState);
-    }
-
     final String LOG_TAG = "myLogs";
     @SuppressLint("SimpleDateFormat")
     final DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -149,5 +142,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.files_settings:
+                Intent intent = new Intent(this, FilesActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
