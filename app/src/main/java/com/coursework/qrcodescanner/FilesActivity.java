@@ -1,6 +1,7 @@
 package com.coursework.qrcodescanner;
 
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -21,14 +24,15 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.files_activity);
         getFileList();
-
+        ListView lv = (ListView) findViewById(android.R.id.list);
+        View empty = findViewById(android.R.id.empty);
         mAdapter = new ArrayAdapter<>(this,
-                R.layout.files_activity, names);
-
-        setListAdapter(mAdapter);
-
+                android.R.layout.simple_list_item_1, names);
+        lv.setAdapter(mAdapter);
+        lv.setEmptyView(empty);
+        getListView().setOnItemLongClickListener(this);
 
     }
     private void getFileList(){
@@ -60,14 +64,29 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        String selectedItem = parent.getItemAtPosition(position).toString();
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage("Удалить?");
+        alert.setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
 
-        mAdapter.remove(selectedItem);
-        mAdapter.notifyDataSetChanged();
+                mAdapter.remove(selectedItem);
+                mAdapter.notifyDataSetChanged();
 
-        Toast.makeText(getApplicationContext(),
-                selectedItem + " удалён.",
-                Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        selectedItem + " удалён.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(FilesActivity.this, "Отменено", Toast.LENGTH_LONG).show();
+            }
+        });
+        alert.create().show();
+
         return true;
     }
 }

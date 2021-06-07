@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">QRCodeScanner</string>
+    <string name="empty_list">Файлы отсутствуют</string>
 </resources>
