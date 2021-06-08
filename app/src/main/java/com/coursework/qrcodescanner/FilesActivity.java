@@ -95,7 +95,7 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
             }
         });
         alert.create().show();
-
+    
         return true;
     }
 }

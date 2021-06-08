@@ -27,9 +27,11 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
+    HashSet<String> results = new HashSet<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,14 +121,17 @@ public class MainActivity extends AppCompatActivity {
         File sdFile = new File(sdPath, FILENAME);
 
         try {
+            if(results.add(result.getText())) {
+                FileWriter writer = new FileWriter(sdFile, true);
+                BufferedWriter bufferWriter = new BufferedWriter(writer);
+                bufferWriter.write(result.getText() + " " + currentDate + "\n");
+                bufferWriter.close();
 
-            FileWriter writer = new FileWriter(sdFile, true);
-            BufferedWriter bufferWriter = new BufferedWriter(writer);
-            bufferWriter.write(result.getText()+" "+currentDate+"\n");
-            bufferWriter.close();
-
-            Log.d(LOG_TAG, "Файл записан на SD: " + sdFile.getAbsolutePath());
-            Toast.makeText(this, "Добавлено", Toast.LENGTH_SHORT).show();
+                Log.d(LOG_TAG, "Файл записан на SD: " + sdFile.getAbsolutePath());
+                Toast.makeText(this, "Добавлено", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Уже существует", Toast.LENGTH_SHORT).show();
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
