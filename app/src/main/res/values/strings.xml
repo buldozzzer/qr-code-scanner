@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">QRCodeScanner</string>
     <string name="empty_list">Файлы отсутствуют</string>
+    <string name="empty_file">Записи отсутствуют</string>
 </resources>

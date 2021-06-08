@@ -2,6 +2,7 @@ package com.coursework.qrcodescanner;
 
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.List;
 public class FilesActivity extends ListActivity implements AdapterView.OnItemLongClickListener {
     private ArrayAdapter<String> mAdapter;
     ArrayList<String> names = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,15 +37,16 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
         getListView().setOnItemLongClickListener(this);
 
     }
-    private void getFileList(){
+
+    private void getFileList() {
         File sdPath = Environment.getExternalStorageDirectory();
-        File dir = new File(sdPath.getAbsolutePath()+"/Отчёты");
+        File dir = new File(sdPath.getAbsolutePath() + "/Отчёты");
         File[] arrFiles = dir.listFiles(new FilenameFilter() {
             public boolean accept(File directory, String fileName) {
                 return fileName.endsWith(".txt");
             }
         });
-        if(arrFiles != null) {
+        if (arrFiles != null) {
             for (File file :
                     arrFiles) {
                 names.add(file.getName());
@@ -55,11 +58,12 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-//        Toast.makeText(getApplicationContext(),
-//                "Вы выбрали " + (position + 1) + " элемент", Toast.LENGTH_SHORT).show();
-
-        Toast.makeText(getApplicationContext(),
-                "Вы выбрали " + l.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+        File sdPath = Environment.getExternalStorageDirectory();
+        String path = sdPath.getAbsolutePath() + "/Отчёты/" +
+                l.getItemAtPosition(position).toString();
+        Intent intent = new Intent(this, ContentActivity.class);
+        intent.putExtra("filename", path);
+        startActivity(intent);
     }
 
     @Override
@@ -79,7 +83,7 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
                     mAdapter.notifyDataSetChanged();
 
                     Toast.makeText(getApplicationContext(),
-                            "Файл " + selectedItem + " удалён.",
+                            "Файл " + selectedItem + " удалён",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(),
@@ -95,7 +99,7 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
             }
         });
         alert.create().show();
-    
+
         return true;
     }
 }
