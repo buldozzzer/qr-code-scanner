@@ -8,9 +8,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +73,36 @@ public class MainActivity extends AppCompatActivity {
                     mCodeScanner.startPreview();
                 }
             });
+            EditText location_tw = findViewById(R.id.location_view);
+            location_tw.setOnLongClickListener(new  View.OnLongClickListener(){
+
+                @Override
+                public boolean onLongClick(View v) {
+                    onCreateLocationDialog();
+                    return true;
+                }
+            });
+            location_tw.setOnKeyListener(new View.OnKeyListener()
+                                      {
+                                          @Override
+                                          public boolean onKey(View v, int keyCode, KeyEvent event)
+                                          {
+                                              if(event.getAction() == KeyEvent.ACTION_DOWN &&
+                                                      (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                                                  if (location_tw.getText().toString().equals("")) {
+                                                      Toast.makeText(getApplicationContext(),
+                                                              "Не может быть пустым", Toast.LENGTH_SHORT).show();
+                                                      location_tw.setText(R.string.location_text);
+                                                      location = String.valueOf(R.string.location_text);
+                                                  } else {
+                                                      location = location_tw.getText().toString();
+                                                  }
+                                                  return true;
+                                              }
+                                              return false;
+                                          }
+                                      }
+            );
         } else {
             requestPermissions();
         }
@@ -99,8 +131,6 @@ public class MainActivity extends AppCompatActivity {
         alert.setPositiveButton("Добавить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-//                Toast.makeText(MainActivity.this, "OK", Toast.LENGTH_LONG).show();
                 writeFileSD(result);
 
             }
@@ -173,10 +203,9 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Локации")
                 .setItems(test_data, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        TextView location_tw = findViewById(R.id.location_view);
+                        EditText location_tw = findViewById(R.id.location_view);
                         location_tw.setText(test_data[which]);
                         location_tw.setTextSize(18);
-
                     }
                 });
         builder.create().show();
@@ -258,9 +287,5 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Закрыть", null)
                 .create()
                 .show();
-    }
-
-    public void onClickLocation(View view) {
-        onCreateLocationDialog();
     }
 }
