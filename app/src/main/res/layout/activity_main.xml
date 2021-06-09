@@ -34,6 +34,7 @@
         android:layout_alignParentTop="true"
         android:longClickable="true"
         android:layout_marginTop="18dp"
+        android:selectAllOnFocus="true"
         android:singleLine="true"
         android:background="@null"
         />
