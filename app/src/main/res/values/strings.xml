@@ -3,6 +3,12 @@
     <string name="empty_list">Файлы отсутствуют</string>
     <string name="empty_file">Записи отсутствуют</string>
     <string name="file_list">Список файлов</string>
-    <string name="location_list">Метки локаций</string>
+    <string name="location_list">Список локаций</string>
     <string name="location_text">Локация не указана</string>
+    <string name="empty_location_list">Список пуст</string>
+    <string name="add_button_description">Добавить запись</string>
+    <string name="object_ph">Подразделение</string>
+    <string name="unit_ph">Подразделение</string>
+    <string name="corpus_ph">Корпус</string>
+    <string name="cabinet_ph">Кабинет</string>
 </resources>

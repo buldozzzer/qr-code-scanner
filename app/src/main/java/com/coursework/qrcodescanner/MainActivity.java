@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(checkPermissions()) {
+        if (checkPermissions()) {
             CodeScannerView scannerView = findViewById(R.id.scanner_view);
             mCodeScanner = new CodeScanner(this, scannerView);
             mCodeScanner.setDecodeCallback(new DecodeCallback() {
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             EditText location_tw = findViewById(R.id.location_view);
-            location_tw.setOnLongClickListener(new  View.OnLongClickListener(){
+            location_tw.setOnLongClickListener(new View.OnLongClickListener() {
 
                 @Override
                 public boolean onLongClick(View v) {
@@ -82,27 +82,26 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             });
-            location_tw.setOnKeyListener(new View.OnKeyListener()
-                                      {
-                                          @Override
-                                          public boolean onKey(View v, int keyCode, KeyEvent event)
-                                          {
-                                              if(event.getAction() == KeyEvent.ACTION_DOWN &&
-                                                      (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                                                  if (location_tw.getText().toString().equals("")) {
-                                                      Toast.makeText(getApplicationContext(),
-                                                              "Не может быть пустым", Toast.LENGTH_SHORT).show();
-                                                      location_tw.setText(R.string.location_text);
-                                                      location = String.valueOf(R.string.location_text);
-                                                  } else {
-                                                      location = location_tw.getText().toString();
-                                                  }
-                                                  return true;
-                                              }
-                                              return false;
-                                          }
-                                      }
-            );
+            location_tw.
+                    setOnKeyListener(new View.OnKeyListener() {
+                                         @Override
+                                         public boolean onKey(View v, int keyCode, KeyEvent event) {
+                                             if (event.getAction() == KeyEvent.ACTION_DOWN &&
+                                                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                                                 if (location_tw.getText().toString().equals("")) {
+                                                     Toast.makeText(getApplicationContext(),
+                                                             "Не может быть пустым", Toast.LENGTH_SHORT).show();
+                                                     location_tw.setText(R.string.location_text);
+                                                     location = String.valueOf(R.string.location_text);
+                                                 } else {
+                                                     location = location_tw.getText().toString();
+                                                 }
+                                                 return true;
+                                             }
+                                             return false;
+                                         }
+                                     }
+                    );
         } else {
             requestPermissions();
         }
@@ -185,14 +184,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.files_settings:
-                Intent intent = new Intent(this, FilesActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(this, FilesActivity.class);
+                startActivity(intent1);
                 return true;
             case R.id.locations_settings:
-                onCreateLocationDialog();
+                Intent intent2 = new Intent(this, LocationsActivity.class);
+                startActivity(intent2);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
