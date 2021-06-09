@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     private final DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
     private final String DIR_SD = "Отчёты";
-    private String location = "Местоположение не установлено";
+    private String location = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Локации")
                 .setItems(test_data, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        TextView location_tw = findViewById(R.id.location_view);
+                        location_tw.setText(test_data[which]);
+                        location_tw.setTextSize(18);
                     }
                 });
         builder.create().show();
