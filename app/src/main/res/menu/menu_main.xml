@@ -3,5 +3,9 @@
     <item
         android:id="@+id/files_settings"
         android:orderInCategory="1"
-        android:title="Список файлов" />
+        android:title="@string/file_list" />
+    <item
+        android:id="@+id/locations_settings"
+        android:orderInCategory="2"
+        android:title="@string/location_list" />
 </menu>

@@ -2,4 +2,6 @@
     <string name="app_name">QRCodeScanner</string>
     <string name="empty_list">Файлы отсутствуют</string>
     <string name="empty_file">Записи отсутствуют</string>
+    <string name="file_list">Список файлов</string>
+    <string name="location_list">Метки локаций</string>
 </resources>
