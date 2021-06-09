@@ -31,6 +31,8 @@
         android:textColor="@color/white"
         android:layout_marginTop="18sp"
         android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:onClick="onClickLocation"
         />
 
 </RelativeLayout>

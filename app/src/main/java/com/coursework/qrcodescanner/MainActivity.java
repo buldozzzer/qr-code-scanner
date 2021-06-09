@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         TextView location_tw = findViewById(R.id.location_view);
                         location_tw.setText(test_data[which]);
                         location_tw.setTextSize(18);
+
                     }
                 });
         builder.create().show();
@@ -257,5 +258,9 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Закрыть", null)
                 .create()
                 .show();
+    }
+
+    public void onClickLocation(View view) {
+        onCreateLocationDialog();
     }
 }
