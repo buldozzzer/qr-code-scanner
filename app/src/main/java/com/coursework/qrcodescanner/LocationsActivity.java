@@ -5,7 +5,6 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +17,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
-import butterknife.BindView;
-
-import static org.apache.commons.codec.CharEncoding.US_ASCII;
-import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 public class LocationsActivity extends ListActivity implements AdapterView.OnItemLongClickListener {
     private ArrayAdapter<String> mAdapter;
@@ -85,8 +74,6 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
                     isr.close();
                     boolean delete = getFileStreamPath(filename).delete();
                     boolean rename = getFileStreamPath("tmp.txt").renameTo(getFileStreamPath(filename));
-                    Log.d("my_los", String.valueOf(rename));
-                    Log.d("my_los", String.valueOf(delete));
                     if (delete && rename) {
                         mAdapter.remove(selectedString);
                         mAdapter.notifyDataSetChanged();
@@ -104,13 +91,12 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
                         IOException e) {
                     e.printStackTrace();
                 } finally {
-                    try{
-                        if(fos!=null)
+                    try {
+                        if (fos != null)
                             fos.close();
-                        if(isr!=null)
+                        if (isr != null)
                             isr.close();
-                    }
-                    catch(IOException ex){
+                    } catch (IOException ex) {
 
                         Toast.makeText(LocationsActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -129,7 +115,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
     }
 
 
-    void fileReader (){
+    void fileReader() {
         try {
             FileInputStream in = openFileInput(filename);
             InputStreamReader inputStreamReader = new InputStreamReader(in);
@@ -160,7 +146,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
                     object = (EditText) finalView.findViewById(R.id.object);
                     corpus = (EditText) finalView.findViewById(R.id.corpus);
                     cabinet = (EditText) finalView.findViewById(R.id.cabinet);
-                    String resultLine = object.getText().toString()+'_'+corpus.getText().toString()+'_'+cabinet.getText().toString()+'\n';
+                    String resultLine = object.getText().toString() + '_' + corpus.getText().toString() + '_' + cabinet.getText().toString() + '\n';
                     fos = openFileOutput(filename, Context.MODE_APPEND);
                     Log.d("my_logs", resultLine);
                     fos.write(resultLine.getBytes());
@@ -169,11 +155,10 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
-                    try{
-                        if(fos!=null)
+                    try {
+                        if (fos != null)
                             fos.close();
-                    }
-                    catch(IOException ex){
+                    } catch (IOException ex) {
 
                         Toast.makeText(LocationsActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                     }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,35 +74,14 @@ public class MainActivity extends AppCompatActivity {
                     mCodeScanner.startPreview();
                 }
             });
-            EditText location_tw = findViewById(R.id.location_view);
+            TextView location_tw = findViewById(R.id.location_view);
             location_tw.setOnLongClickListener(new View.OnLongClickListener() {
-
                 @Override
                 public boolean onLongClick(View v) {
-                    onCreateLocationDialog();
+                    setLocationManually();
                     return true;
                 }
             });
-            location_tw.
-                    setOnKeyListener(new View.OnKeyListener() {
-                                         @Override
-                                         public boolean onKey(View v, int keyCode, KeyEvent event) {
-                                             if (event.getAction() == KeyEvent.ACTION_DOWN &&
-                                                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                                                 if (location_tw.getText().toString().equals("")) {
-                                                     Toast.makeText(getApplicationContext(),
-                                                             "Не может быть пустым", Toast.LENGTH_SHORT).show();
-                                                     location_tw.setText(R.string.location_text);
-                                                     location = String.valueOf(R.string.location_text);
-                                                 } else {
-                                                     location = location_tw.getText().toString();
-                                                 }
-                                                 return true;
-                                             }
-                                             return false;
-                                         }
-                                     }
-                    );
         } else {
             requestPermissions();
         }
@@ -110,14 +90,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(mCodeScanner != null) {
+        if (mCodeScanner != null) {
             mCodeScanner.startPreview();
         }
+
     }
 
     @Override
     protected void onPause() {
-        if(mCodeScanner != null) {
+        if (mCodeScanner != null) {
             mCodeScanner.releaseResources();
         }
         super.onPause();
@@ -131,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 writeFileSD(result);
-
             }
         });
         alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -145,9 +125,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.files_settings:
+                Intent intent1 = new Intent(this, FilesActivity.class);
+                startActivity(intent1);
+                return true;
+            case R.id.locations_settings:
+                Intent intent2 = new Intent(this, LocationsActivity.class);
+                startActivity(intent2);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void writeFileSD(Result result) {
@@ -184,28 +178,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("NonConstantResourceId")
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.files_settings:
-                Intent intent1 = new Intent(this, FilesActivity.class);
-                startActivity(intent1);
-                return true;
-            case R.id.locations_settings:
-                Intent intent2 = new Intent(this, LocationsActivity.class);
-                startActivity(intent2);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void onCreateLocationDialog() {
+    public void onCreateLocationListDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] test_data = {"red", "green", "blue"};
         builder.setTitle("Локации")
                 .setItems(test_data, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        EditText location_tw = findViewById(R.id.location_view);
+                        TextView location_tw = findViewById(R.id.location_view);
                         location_tw.setText(test_data[which]);
                         location_tw.setTextSize(18);
                     }
@@ -240,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
@@ -289,5 +268,47 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("Закрыть", null)
                 .create()
                 .show();
+    }
+
+    public void setLocationManually() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Добавить локацию");
+        alert.setCancelable(false);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_activity, null);
+        alert.setView(view);
+        View finalView = view;
+        alert.setPositiveButton("Добавить", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "Отменено", Toast.LENGTH_LONG).show();
+            }
+        });
+        final AlertDialog dialog = alert.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText object = (EditText) finalView.findViewById(R.id.object);
+                EditText corpus = (EditText) finalView.findViewById(R.id.corpus);
+                EditText cabinet = (EditText) finalView.findViewById(R.id.cabinet);
+                String resultLine = object.getText().toString().trim() + '_' + corpus.getText().toString().trim() + '_' + cabinet.getText().toString().trim() + '\n';
+                Log.d("TEST", resultLine);
+                if (!resultLine.equals("__\n")) {
+                    TextView location_tw = (TextView) findViewById(R.id.location_view);
+                    location_tw.setText(resultLine);
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(MainActivity.this, "Значения не могут быть пустыми", Toast.LENGTH_LONG).show();
+                    TextView location_tw = (TextView) findViewById(R.id.location_view);
+                    location_tw.setText(R.string.location_text);
+                }
+            }
+        });
     }
 }
