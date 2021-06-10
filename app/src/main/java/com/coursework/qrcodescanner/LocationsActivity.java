@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -22,15 +23,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class LocationsActivity extends ListActivity implements AdapterView.OnItemLongClickListener {
     private ArrayAdapter<String> mAdapter;
     String filename = "locations.txt";
     ArrayList<String> rows = new ArrayList<>();
+    HashSet<String> rows_uniq = new HashSet<>();
     EditText object;
     EditText corpus;
     EditText cabinet;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +124,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                rows.add(line.trim());
+                rows_uniq.add(line.trim());
             }
             inputStreamReader.close();
         } catch (IOException ex) {
@@ -134,6 +136,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
     public void changeList(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Добавить локацию");
+        alert.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         view = inflater.inflate(R.layout.dialog_activity, null);
         alert.setView(view);
@@ -141,17 +144,39 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
         alert.setPositiveButton("Добавить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(LocationsActivity.this, "Отменено", Toast.LENGTH_LONG).show();
+            }
+        });
+        final AlertDialog dialog = alert.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 FileOutputStream fos = null;
                 try {
                     object = (EditText) finalView.findViewById(R.id.object);
                     corpus = (EditText) finalView.findViewById(R.id.corpus);
                     cabinet = (EditText) finalView.findViewById(R.id.cabinet);
-                    String resultLine = object.getText().toString() + '_' + corpus.getText().toString() + '_' + cabinet.getText().toString() + '\n';
+                    String resultLine = object.getText().toString().trim() + '_' + corpus.getText().toString().trim() + '_' + cabinet.getText().toString().trim() + '\n';
                     fos = openFileOutput(filename, Context.MODE_APPEND);
                     Log.d("my_logs", resultLine);
-                    fos.write(resultLine.getBytes());
-                    mAdapter.add(resultLine);
-                    mAdapter.notifyDataSetChanged();
+                    if (!resultLine.equals("__\n")) {
+                        if(rows_uniq.add(resultLine)) {
+                            fos.write(resultLine.getBytes());
+                            mAdapter.add(resultLine);
+                            mAdapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(LocationsActivity.this, "Уже существует", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(LocationsActivity.this, "Запись не может быть пустой", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -165,12 +190,5 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
                 }
             }
         });
-        alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(LocationsActivity.this, "Отменено", Toast.LENGTH_LONG).show();
-            }
-        });
-        alert.create().show();
     }
 }
