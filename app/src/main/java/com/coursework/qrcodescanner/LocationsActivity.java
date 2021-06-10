@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -33,6 +32,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
     EditText object;
     EditText corpus;
     EditText cabinet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +125,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 rows_uniq.add(line.trim());
+                rows.add(line.trim());
             }
             inputStreamReader.close();
         } catch (IOException ex) {
@@ -166,7 +167,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
                     fos = openFileOutput(filename, Context.MODE_APPEND);
                     Log.d("my_logs", resultLine);
                     if (!resultLine.equals("__\n")) {
-                        if(rows_uniq.add(resultLine)) {
+                        if (rows_uniq.add(resultLine)) {
                             fos.write(resultLine.getBytes());
                             mAdapter.add(resultLine);
                             mAdapter.notifyDataSetChanged();

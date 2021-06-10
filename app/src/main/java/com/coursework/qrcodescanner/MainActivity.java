@@ -27,13 +27,17 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -180,16 +184,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void onCreateLocationListDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String[] test_data = {"red", "green", "blue"};
-        builder.setTitle("Локации")
-                .setItems(test_data, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        TextView location_tw = findViewById(R.id.location_view);
-                        location_tw.setText(test_data[which]);
-                        location_tw.setTextSize(18);
-                    }
-                });
-        builder.create().show();
+        ArrayList<String> raw_data = fileReader();
+        String[] data = raw_data.toArray(new String[raw_data.size()]);
+        if(data.length != 0) {
+            builder.setTitle("Локации")
+                    .setItems(data, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            TextView location_tw = findViewById(R.id.location_view);
+                            location_tw.setText(data[which]);
+                            location_tw.setTextSize(18);
+                        }
+                    });
+            builder.create().show();
+        } else {
+            Toast.makeText(MainActivity.this, "Список пуст", Toast.LENGTH_LONG).show();
+        }
     }
 
     private boolean checkPermissions() {
@@ -286,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_activity, null);
         alert.setView(view);
-        View finalView = view;
         alert.setPositiveButton("Добавить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -303,9 +311,9 @@ public class MainActivity extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText object = (EditText) finalView.findViewById(R.id.object);
-                EditText corpus = (EditText) finalView.findViewById(R.id.corpus);
-                EditText cabinet = (EditText) finalView.findViewById(R.id.cabinet);
+                EditText object = (EditText) view.findViewById(R.id.object);
+                EditText corpus = (EditText) view.findViewById(R.id.corpus);
+                EditText cabinet = (EditText) view.findViewById(R.id.cabinet);
                 String resultLine = object.getText().toString().trim() + '_' + corpus.getText().toString().trim() + '_' + cabinet.getText().toString().trim() + '\n';
                 Log.d("TEST", resultLine);
                 if (!resultLine.equals("__\n")) {
@@ -319,5 +327,24 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private ArrayList<String> fileReader() {
+        ArrayList<String> locations = new ArrayList<>();
+        try {
+            FileInputStream in = openFileInput("locations.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                locations.add(line.trim());
+            }
+            inputStreamReader.close();
+            in.close();
+            return locations;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return locations;
     }
 }
