@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (checkPermissions()) {
+
             CodeScannerView scannerView = findViewById(R.id.scanner_view);
             mCodeScanner = new CodeScanner(this, scannerView);
             mCodeScanner.setDecodeCallback(new DecodeCallback() {
@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getApplicationContext(), "Разрешения получены", Toast.LENGTH_SHORT).show();
+
                     CodeScannerView scannerView = findViewById(R.id.scanner_view);
                     mCodeScanner = new CodeScanner(this, scannerView);
                     mCodeScanner.setDecodeCallback(new DecodeCallback() {
@@ -242,6 +243,14 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             mCodeScanner.startPreview();
+                        }
+                    });
+                    TextView location_tw = findViewById(R.id.location_view);
+                    location_tw.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            setLocationManually();
+                            return true;
                         }
                     });
                 } else {

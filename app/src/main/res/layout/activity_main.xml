@@ -35,6 +35,7 @@
         android:longClickable="true"
         android:onClick="onCreateLocationListDialog"
         android:layout_marginTop="18dp"
+        android:textSize="20dp"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:background="@null" />
