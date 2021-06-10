@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         alert.setPositiveButton("Добавить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                writeFileSD(result);
+                writeToFile(result);
             }
         });
         alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void writeFileSD(Result result) {
+    void writeToFile(Result result) {
         final String currentDate = df.format(new Date());
         final String FILENAME = "Отчёт_" + currentDate + ".txt";
 
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             if (results.add(result.getText())) {
                 FileWriter writer = new FileWriter(sdFile, true);
                 BufferedWriter bufferWriter = new BufferedWriter(writer);
-                bufferWriter.write(result.getText() + " " + currentDate + "\n");
+                bufferWriter.write(result.getText() + " " + currentDate + ' ' + location + "\n");
                 bufferWriter.close();
 
                 Log.d(LOG_TAG, "Файл записан на SD: " + sdFile.getAbsolutePath());
@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
                             TextView location_tw = findViewById(R.id.location_view);
                             location_tw.setText(data[which]);
                             location_tw.setTextSize(18);
+                            location = data[which];
                         }
                     });
             builder.create().show();
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setLocationManually() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Добавить локацию");
+        alert.setTitle("Ввести локацию");
         alert.setCancelable(false);
         LayoutInflater inflater = this.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_activity, null);
@@ -319,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!resultLine.equals("__\n")) {
                     TextView location_tw = (TextView) findViewById(R.id.location_view);
                     location_tw.setText(resultLine);
+                    location = resultLine;
                     dialog.dismiss();
                 } else {
                     Toast.makeText(MainActivity.this, "Значения не могут быть пустыми", Toast.LENGTH_LONG).show();
