@@ -11,4 +11,8 @@
     <string name="unit_ph">Подразделение</string>
     <string name="corpus_ph">Корпус</string>
     <string name="cabinet_ph">Кабинет</string>
+    <string name="inv_n">Инвентарный номер</string>
+    <string name="ser_n">Серийный номер</string>
+    <string name="date">Дата</string>
+    <string name="_1234567890">1234567890</string>
 </resources>

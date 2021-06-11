@@ -163,7 +163,7 @@ public class LocationsActivity extends ListActivity implements AdapterView.OnIte
                     object = (EditText) finalView.findViewById(R.id.object);
                     corpus = (EditText) finalView.findViewById(R.id.corpus);
                     cabinet = (EditText) finalView.findViewById(R.id.cabinet);
-                    String resultLine = object.getText().toString().trim() + '_' + corpus.getText().toString().trim() + '_' + cabinet.getText().toString().trim() + '\n';
+                    String resultLine = "Об:" + object.getText().toString().trim() + " Корп:" + corpus.getText().toString().trim() + " Каб:" + cabinet.getText().toString().trim() + '\n';
                     fos = openFileOutput(filename, Context.MODE_APPEND);
                     Log.d("my_logs", resultLine);
                     if (!resultLine.equals("__\n")) {

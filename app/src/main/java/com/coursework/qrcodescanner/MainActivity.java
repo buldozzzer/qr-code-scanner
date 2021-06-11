@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
                 EditText object = (EditText) view.findViewById(R.id.object);
                 EditText corpus = (EditText) view.findViewById(R.id.corpus);
                 EditText cabinet = (EditText) view.findViewById(R.id.cabinet);
-                String resultLine = object.getText().toString().trim() + '_' + corpus.getText().toString().trim() + '_' + cabinet.getText().toString().trim() + '\n';
+                String resultLine = "Об:" + object.getText().toString().trim() + " Корп:" + corpus.getText().toString().trim() + " Каб:" + cabinet.getText().toString().trim() + '\n';
                 Log.d("TEST", resultLine);
                 if (!resultLine.equals("__\n")) {
                     TextView location_tw = (TextView) findViewById(R.id.location_view);
