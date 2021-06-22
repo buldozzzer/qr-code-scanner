@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     private final DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
     private final String DIR_SD = "Отчёты";
-    private String location = "";
+    private String location = "Об: Корп: Каб:";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,16 +163,22 @@ public class MainActivity extends AppCompatActivity {
         sdPath.mkdir();
 
         File sdFile = new File(sdPath, FILENAME);
-
+        String text = result.getText();
         try {
-            if (results.add(result.getText())) {
-                FileWriter writer = new FileWriter(sdFile, true);
-                BufferedWriter bufferWriter = new BufferedWriter(writer);
-                bufferWriter.write(result.getText() + " " + currentDate + ' ' + location + "\n");
-                bufferWriter.close();
+            if (results.add(text)) {
+                if((text.contains("Инв:") && text.contains("Сер:")) ||
+                        (text.contains("Inv:") && text.contains("Ser:"))) {
+                    FileWriter writer = new FileWriter(sdFile, true);
+                    BufferedWriter bufferWriter = new BufferedWriter(writer);
+                    bufferWriter.write(text.trim() + " " + currentDate + ' ' + location + "\n");
+                    bufferWriter.close();
 
-                Log.d(LOG_TAG, "Файл записан на SD: " + sdFile.getAbsolutePath());
-                Toast.makeText(this, "Добавлено", Toast.LENGTH_SHORT).show();
+                    Log.d(LOG_TAG, "Файл записан на SD: " + sdFile.getAbsolutePath());
+                    Toast.makeText(this, "Добавлено", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Некорректные данные", Toast.LENGTH_SHORT).show();
+                }
+                return;
             } else {
                 Toast.makeText(this, "Уже существует", Toast.LENGTH_SHORT).show();
             }

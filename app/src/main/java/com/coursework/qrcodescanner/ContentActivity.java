@@ -29,6 +29,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class ContentActivity extends ListActivity implements AdapterView.OnItemLongClickListener {
@@ -78,25 +79,27 @@ public class ContentActivity extends ListActivity implements AdapterView.OnItemL
         String[] row = l.getItemAtPosition(position).toString().split(" ");
 
         EditText inv_n = (EditText) view.findViewById(R.id.inv_n);
-        inv_n.setText(row[0]);
+        inv_n.setText(row[0].substring(4));
 
         EditText ser_n = (EditText) view.findViewById(R.id.ser_n);
         //все индексы сдвинуть на 1, когда серийник появится
-        ser_n.setText("-");
+        ser_n.setText(row[1].substring(4));
 
         EditText date = (EditText) view.findViewById(R.id.date);
-        date.setText(row[1]);
+        date.setText(row[2]);
         new DateInputMask(date);
 
-
         EditText object = (EditText) view.findViewById(R.id.object);
-        object.setText(row[2].substring(3));
-
         EditText corpus = (EditText) view.findViewById(R.id.corpus);
-        corpus.setText(row[3].substring(5));
-
         EditText cabinet = (EditText) view.findViewById(R.id.cabinet);
-        cabinet.setText(row[4].substring(4));
+
+        object.setText(row[3].substring(3));
+        corpus.setText(row[4].substring(5));
+        if(!row[5].substring(4).equals("\n")) {
+            cabinet.setText(row[5].substring(4).trim());
+        }else{
+            cabinet.setText("");
+        }
 
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -115,8 +118,9 @@ public class ContentActivity extends ListActivity implements AdapterView.OnItemL
                     checkDate = true;
                 }
                 if(checkDate && checkInv && checkSer){
-                    String newStr = inv_n.getText().toString().trim() + ' ' +
-                            ser_n.getText().toString().trim() + ' ' +
+
+                    String newStr = "Инв:" + inv_n.getText().toString().trim() +
+                            " Сер:" + ser_n.getText().toString().trim() + ' ' +
                             date.getText().toString().trim() + " Об:" +
                             object.getText().toString().trim() + " Корп:" +
                             corpus.getText().toString().trim() + " Каб:" +
@@ -162,7 +166,9 @@ public class ContentActivity extends ListActivity implements AdapterView.OnItemL
             BufferedReader reader = new BufferedReader(fr);
             String line = reader.readLine();
             while (line != null) {
-                rows.add(line);
+                if(!line.equals("")) {
+                    rows.add(line);
+                }
                 line = reader.readLine();
             }
         } catch (FileNotFoundException ex){
@@ -220,13 +226,15 @@ public class ContentActivity extends ListActivity implements AdapterView.OnItemL
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
             String line;
             while ((line = reader.readLine()) != null) {
+                Log.d("String", "Строка:" + line);
                 if (!line.equals(oldItem)) {
-                    writer.write(line);
-                    writer.newLine();
+                    if (!line.equals("")) {
+                        writer.write(line);
+                    }
                 } else {
                     writer.write(newItem);
-                    writer.newLine();
                 }
+                writer.newLine();
             }
             reader.close();
             writer.close();
