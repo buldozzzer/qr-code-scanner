@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private final String LOG_TAG = "myLogs";
     @SuppressLint("SimpleDateFormat")
     private final DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-    private final String DIR_SD = "Отчёты";
+    private final String DIR_SD = "Reports";
     private String location = "Об: Корп: Каб:";
 
     @Override
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     void writeToFile(Result result) {
         final String currentDate = df.format(new Date());
-        final String FILENAME = "Отчёт_" + currentDate + ".txt";
+        final String FILENAME = "Report_" + currentDate + ".txt";
 
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {

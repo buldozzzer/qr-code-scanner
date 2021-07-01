@@ -181,7 +181,7 @@ public class ContentActivity extends ListActivity implements AdapterView.OnItemL
     void deleteRow(String selectedItem){
         File sourceFile = new File(name);
         File sdPath = Environment.getExternalStorageDirectory();
-        File outputFile = new File(sdPath.getAbsolutePath() + "/Отчёты/tmp.txt");
+        File outputFile = new File(sdPath.getAbsolutePath() + "/Reports/tmp.txt");
         try {
             BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
 
@@ -219,7 +219,7 @@ public class ContentActivity extends ListActivity implements AdapterView.OnItemL
     void rewriteFile(String oldItem, String newItem){
         File sourceFile = new File(name);
         File sdPath = Environment.getExternalStorageDirectory();
-        File outputFile = new File(sdPath.getAbsolutePath() + "/Отчёты/tmp.txt");
+        File outputFile = new File(sdPath.getAbsolutePath() + "/Reports/tmp.txt");
         try {
             BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
 

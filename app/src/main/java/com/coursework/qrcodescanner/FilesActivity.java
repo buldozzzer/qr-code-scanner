@@ -40,7 +40,7 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
 
     private void getFileList() {
         File sdPath = Environment.getExternalStorageDirectory();
-        File dir = new File(sdPath.getAbsolutePath() + "/Отчёты");
+        File dir = new File(sdPath.getAbsolutePath() + "/Reports");
         File[] arrFiles = dir.listFiles(new FilenameFilter() {
             public boolean accept(File directory, String fileName) {
                 return fileName.endsWith(".txt");
@@ -59,7 +59,7 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         File sdPath = Environment.getExternalStorageDirectory();
-        String path = sdPath.getAbsolutePath() + "/Отчёты/" +
+        String path = sdPath.getAbsolutePath() + "/Reports/" +
                 l.getItemAtPosition(position).toString();
         Intent intent = new Intent(this, ContentActivity.class);
         intent.putExtra("filename", path);
@@ -76,7 +76,7 @@ public class FilesActivity extends ListActivity implements AdapterView.OnItemLon
                 String selectedItem = parent.getItemAtPosition(position).toString();
 
                 File sdPath = Environment.getExternalStorageDirectory();
-                File file = new File(sdPath.getAbsolutePath() + "/Отчёты/" + selectedItem);
+                File file = new File(sdPath.getAbsolutePath() + "/Reports/" + selectedItem);
                 boolean result = file.delete();
                 if (result) {
                     mAdapter.remove(selectedItem);
